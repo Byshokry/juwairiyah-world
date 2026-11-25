@@ -1,0 +1,34 @@
+
+name: Build Juwairiyah World APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract project
+        run: unzip -o JuwairiyahWorld_CloudBuild_Package.zip -d .
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JuwairiyahWorld-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
